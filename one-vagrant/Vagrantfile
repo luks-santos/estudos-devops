@@ -1,0 +1,21 @@
+# Iniciando a configuração do Vagrant (versão 2)
+Vagrant.configure("2") do |config|
+  config.vm.define "vagrant-01"
+  
+  # Especificando a imagem base da VM (CentOS 7)
+  config.vm.box = "centos/7"
+
+  # Verificando se o plugin "vagrant-vbguest" está instalado e desabilitando atualizações automáticas
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+  end
+
+  # Configurando a regra de mapeamento de porta para acessar a porta 80 da VM a partir da porta 8080 do host
+  # Apenas permitindo o acesso através de 127.0.0.1 para desabilitar o acesso público
+  config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Habilitando a provisão da VM com um script shell localizado em "provision.sh"
+  # Isso permite configurar a VM com comandos personalizados
+  config.vm.provision "shell", path: "provision.sh"
+
+end
